@@ -27,11 +27,11 @@ let tokyo = getDate(now: date, zone: 9)
 let newyork = getDate(now: date, zone: -5)
 let london = getDate(now: date, zone: 0)
 print("第一题：")
-print(beiJing+"\n"+tokyo+"\n"+newyork+"\n"+london)
+print("北京:  "+beiJing+"\n"+"东京:  "+tokyo+"\n"+"纽约:  "+newyork+"\n"+"伦敦:  "+london)
 
 //作业二
 let testString = "Swift is a powerful and intuitive programming language for iOS, OS X, tvOS, and watchOS"
-print("原字符串是:   ")
+print("原字符串是:   "+testString)
 let startIndex = testString.index(testString.startIndex, offsetBy: 5)
 let endIndex = testString.index(testString.startIndex, offsetBy: 19)
 print("第二题：")
@@ -46,7 +46,7 @@ let defaultDoc = FileManager.default
 if var path = defaultDoc.urls(for: .documentDirectory, in: .userDomainMask).first?.path{
     //新建文件
     print("第三题： ")
-    print("txt文件默认路径:"+path)
+    print("txt文件默认路径:   "+path)
     path.append("fyy.txt")
     print(dic.write(toFile: path, atomically: true))
 }
