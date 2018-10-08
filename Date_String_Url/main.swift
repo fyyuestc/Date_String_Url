@@ -51,6 +51,19 @@ if var path = defaultDoc.urls(for: .documentDirectory, in: .userDomainMask).firs
     print(dic.write(toFile: path, atomically: true))
 }
 
+//自定义的类
+class Person : Codable{
+    var name : String
+    var age : Int
+    init(name : String,age : Int) {
+        self.age = age
+        self.name = name
+    }
+}
+let encoder = JSONEncoder()
+let decoder = JSONDecoder()
+let fyy = Person(name: "fyy", age: 20)
+
 //作业四
 //图片的URL
 let image = try? Data(contentsOf : URL(string: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3674402439,2717698677&fm=27&gp=0.jpg")!)
@@ -58,12 +71,16 @@ if var url = defaultDoc.urls(for: .documentDirectory, in: .userDomainMask).first
     //新建文件
     print("第四题 : ")
     print("jpg图片路径:     \(url)")
-    url.appendPathComponent("image.jpg")
+    //把自定义对象存入文件
+    url.appendPathComponent("JSon.txt")
+    let dataJson = try? encoder.encode(fyy)
+    try? dataJson?.write(to: url)
     //写入文件路径,图片只能write(to : URL)一种写入
-    try? image!.write(to: url)
+    //try? image!.write(to: url)
 } else {
     print("error")
 }
+
 
 
 
