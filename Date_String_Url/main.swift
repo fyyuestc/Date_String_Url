@@ -59,12 +59,13 @@ if var url = defaultDoc.urls(for: .documentDirectory, in: .userDomainMask).first
     print("第四题 : ")
     print("jpg图片路径:     \(url)")
     url.appendPathComponent("image.jpg")
-    //写入文件路径
-    try? image?.write(to: url)
-   
+    //写入文件路径,图片只能write(to : URL)一种写入
+    try? image!.write(to: url)
 } else {
     print("error")
 }
+
+
 
 //let url = defaultDoc.urls(for: .documentDirectory, in: .userDomainMask).first!
 //var imageUrl = URL(string : "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3674402439,2717698677&fm=27&gp=0.jpg")!
@@ -74,7 +75,7 @@ if var url = defaultDoc.urls(for: .documentDirectory, in: .userDomainMask).first
 //系统提示没有UIImage类
 //let image = UIImage(data: imageData!)
 
-//作业
+//作业五
 //使用json接口
 let weatherUrl = URL(string : "http://www.weather.com.cn/data/sk/101270102.html")
 //let str = try? String(contentsOf: weatherUrl!)  显示json数据
