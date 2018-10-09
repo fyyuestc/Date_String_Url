@@ -51,7 +51,11 @@ if var path = defaultDoc.urls(for: .documentDirectory, in: .userDomainMask).firs
     print(dic.write(toFile: path, atomically: true))
 }
 
-//自定义的类
+
+//测试：自定义的类及其子类放在一个数组中存入文件
+enum MyKey:CodingKey{
+    case sno
+}
 class Person : Codable{
     var name : String
     var age : Int
@@ -60,23 +64,56 @@ class Person : Codable{
         self.name = name
     }
 }
+class Student : Person{
+    var sno : String
+    init(name : String,age : Int,sno : String){
+        self.sno = sno
+        super.init(name: name, age: age)
+    }
+    //编码方法
+    override func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: MyKey.self)
+        try container.encode(sno, forKey: MyKey.sno)
+        try super.encode(to: encoder)
+    }
+    //解码方法
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: MyKey.self)
+        self.sno = try container.decode(String.self, forKey: .sno)
+        try super.init(from: decoder)
+   }
+}
 let encoder = JSONEncoder()
 let decoder = JSONDecoder()
 let fyy = Person(name: "fyy", age: 20)
+let fyyStudent = Student(name: "ljl", age: 18, sno: "2016110325")
+let diction = [fyy,fyyStudent]
+if var urlJson = defaultDoc.urls(for: .documentDirectory, in: .userDomainMask).first {
+    //新建文件
+    print("额外测试 : ")
+    print("父类子类数组存入文件URL:     \(urlJson)")
+    //把自定义对象存入文件
+    urlJson.appendPathComponent("JSonArryayExtend.txt")
+    let dataJson = try? encoder.encode(diction)
+    print("编码前diction数据是： "+String(data: dataJson!, encoding: .utf8)!)
+    try? dataJson?.write(to: urlJson)
+    let dataAfterEncode = try? Data.init(contentsOf: urlJson)
+    let newJson = try decoder.decode(type(of: diction), from: dataJson!)
+    print("解码后数据是： "+String(data: dataAfterEncode!, encoding: .utf8)!)
+} else {
+    print("error")
+}
+
 
 //作业四
 //图片的URL
 let image = try? Data(contentsOf : URL(string: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3674402439,2717698677&fm=27&gp=0.jpg")!)
-if var url = defaultDoc.urls(for: .documentDirectory, in: .userDomainMask).first {
+if let url = defaultDoc.urls(for: .documentDirectory, in: .userDomainMask).first {
     //新建文件
     print("第四题 : ")
     print("jpg图片路径:     \(url)")
-    //把自定义对象存入文件
-    url.appendPathComponent("JSon.txt")
-    let dataJson = try? encoder.encode(fyy)
-    try? dataJson?.write(to: url)
     //写入文件路径,图片只能write(to : URL)一种写入
-    //try? image!.write(to: url)
+    try? image!.write(to: url)
 } else {
     print("error")
 }
@@ -95,10 +132,12 @@ if var url = defaultDoc.urls(for: .documentDirectory, in: .userDomainMask).first
 //作业五
 //使用json接口
 let weatherUrl = URL(string : "http://www.weather.com.cn/data/sk/101270102.html")
-//let str = try? String(contentsOf: weatherUrl!)  显示json数据
-//print(str!)
+let str = try? String(contentsOf: weatherUrl!)          //显示json数据
+//print("String for json"+str!)
 let weatherData = try? Data(contentsOf: weatherUrl!)   //显示二进制json数据
+//print(weatherData!)
 let json = try? JSONSerialization.jsonObject(with: weatherData!, options: .allowFragments)
+
 //解析json数据开始
 if let dic = json as? [String : Any] {
     if let weatherNow = dic["weatherinfo"] as? [String : Any] {
