@@ -43,12 +43,14 @@ print("删除OS后字符串是: "+testString.replacingOccurrences(of: "OS", with
 let dic = ["date" : ["beiJIng" : beiJing,"tokyo" : tokyo,"newyork" : newyork,"london" : london] as [String : String], "string" : testString] as AnyObject
 //获得默认工作路径
 let defaultDoc = FileManager.default
-if var path = defaultDoc.urls(for: .documentDirectory, in: .userDomainMask).first?.path{
+if var path = defaultDoc.urls(for: .documentDirectory, in: .userDomainMask).first{
     //新建文件
     print("第三题： ")
-    print("txt文件默认路径:   "+path)
-    path.append("fyy.txt")
-    print(dic.write(toFile: path, atomically: true))
+    //使用appendPathComponent可以看到文件
+    path.appendPathComponent("fyy.txt")
+    //使用append可以存但看不见
+    //path.append("fyy.txt")
+    print(try dic.write(to:path))
 }
 
 
